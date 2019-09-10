@@ -5,36 +5,37 @@ The  field of supervised learning in AI has tremondously impacted the object tra
 
 The Following scientists are core contributers of AI/ML-
 
-Year	Scientists
-1966	Alan J. Perlis
-1967	Maurice Wilkes
-1968	Richard Hamming
-1969	Marvin Minsky
-1970	James H. Wilkinson
-1971	John McCarthy
-1972	Edsger W. Dijkstra
-1973	Charles W. Bachman
-1974	Donald E. Knuth
-1975	Allen Newell and Herbert A. Simon
-1976	Michael O. Rabin
-	Dana S. Scott
-1977	John Backus
-1978	Robert W. Floyd
-1979	Kenneth E. Iverson
-1980	Tony Hoare
-1981	Edgar F. Codd
-1982	Stephen A. Cook
-1983	Ken Thompson and Dennis M. Ritchie
-1984	Niklaus Wirth
-1985	Richard M. Karp
-1986	John Hopcroft and Robert Tarjan
-1987	John Cocke
-1988	Ivan Sutherland
-1989	William Kahan
-2015	Whitfield Diffie and Martin E. Hellman
-2016	Tim Berners-Lee
-2017	John L. Hennessy and David A. Patterson
-2018	Yoshua Bengio, Geoffrey Hinton and Yann LeCun
+***Scientists-Contributers in AI***
+- Alan J. Perlis
+- Maurice Wilkes
+- Richard Hamming
+- Marvin Minsky
+- James H. Wilkinson
+- John McCarthy
+- Edsger W. Dijkstra
+- Charles W. Bachman
+- Donald E. Knuth
+- Allen Newell and Herbert A. Simon
+- Michael O. Rabin
+- Dana S. Scott
+- John Backus
+- Robert W. Floyd
+- Kenneth E. Iverson
+- Tony Hoare
+- Edgar F. Codd
+- Stephen A. Cook
+- Ken Thompson and Dennis M. Ritchie
+- Niklaus Wirth
+- Richard M. Karp
+- John Hopcroft and Robert Tarjan
+- John Cocke
+- Ivan Sutherland
+- William Kahan
+- Whitfield Diffie and Martin E. Hellman
+- Tim Berners-Lee
+- John L. Hennessy and David A. Patterson
+- Yoshua Bengio, Geoffrey Hinton and Yann LeCun
+
 
 
 
