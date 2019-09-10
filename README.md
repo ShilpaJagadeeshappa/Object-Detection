@@ -1010,7 +1010,7 @@ Link2: https://drive.google.com/open?id=17934YONVSXvd4uuJE0KwenEFks7fFYe4
 Link3: https://drive.google.com/open?id=1cs_06CuhXDvZp3fHJWFpam-31eclOhc-
 ```
 
-# Video Detection Timeout
+***Video Detection Timeout***
 
 ImageAI now allows you to set a timeout in seconds for detection of objects in videos or camera live feed. To set a timeout for your video detection code, all you need to do is specify the detection_timeout parameter in the detectObjectsFromVideo() function to the number of desired seconds. In the example code below, we set detection_timeout to 120 seconds (2 minutes).
 
