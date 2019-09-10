@@ -1,5 +1,43 @@
 # Object-Detection
-Object detection using  Machine learning(Image AI) to label ,annotate and score objects  in images and videos.We use Image AI built by Moses Olafenwa and John Olafenwa brothers, creators of TorchFusion and Authors of Introduction to Deep Computer Vision
+Object detection using  Machine learning(Image AI) to label ,annotate and score objects  in images and videos.We use Image AI built by Moses Olafenwa and John Olafenwa brothers, creators of TorchFusion and Authors of Introduction to Deep Computer Vision.We are extremely happy for the launch of ImageAI (v2.1.4) which is extensively used by developers/engineers/scientists/researchers across the globe.
+
+The  field of supervised learning in AI has tremondously impacted the object tracking and detection mechanisms in many ways.We are fascinated in building out custom models and datasets of our own, improving accuracy of models, optimizing the training sessions for the operating systems. The AI concept has evolved from Alan Turing (Enigma code maker and breaker), John Mccarthy (American computer scientist and cognitive scientist) who is best known as "Father Of Artificial Intelligence" together with Marvin Minsky,Allen Newell, Herbert A.The contributions made by these great scientists has made the future path very clear. The ACM A.M. Turing Award is an annual prize given by the Association for Computing Machinery (ACM) to an individual selected for contributions "of lasting and major technical importance to the computer field". The Turing Award is generally recognized as the highest distinction in computer science and the "Nobel Prize of computing".
+
+The Following scientists are core contributers of AI/ML-
+
+Year	Scientists
+1966	Alan J. Perlis
+1967	Maurice Wilkes
+1968	Richard Hamming
+1969	Marvin Minsky
+1970	James H. Wilkinson
+1971	John McCarthy
+1972	Edsger W. Dijkstra
+1973	Charles W. Bachman
+1974	Donald E. Knuth
+1975	Allen Newell and Herbert A. Simon
+1976	Michael O. Rabin
+	Dana S. Scott
+1977	John Backus
+1978	Robert W. Floyd
+1979	Kenneth E. Iverson
+1980	Tony Hoare
+1981	Edgar F. Codd
+1982	Stephen A. Cook
+1983	Ken Thompson and Dennis M. Ritchie
+1984	Niklaus Wirth
+1985	Richard M. Karp
+1986	John Hopcroft and Robert Tarjan
+1987	John Cocke
+1988	Ivan Sutherland
+1989	William Kahan
+2015	Whitfield Diffie and Martin E. Hellman
+2016	Tim Berners-Lee
+2017	John L. Hennessy and David A. Patterson
+2018	Yoshua Bengio, Geoffrey Hinton and Yann LeCun
+
+
+
 
 ImageAI supports a list of state-of-the-art Machine Learning algorithms for image prediction, custom image prediction, object detection, video detection, video object tracking and image predictions trainings. ImageAI currently supports image prediction and training using 4 different Machine Learning algorithms trained on the ImageNet-1000 dataset. ImageAI also supports object detection, video detection and object tracking using RetinaNet, YOLOv3 and TinyYOLOv3 trained on COCO dataset. 
 Eventually, ImageAI will provide support for a wider and more specialized aspects of Computer Vision including and not limited to image recognition in special environments and special fields.
