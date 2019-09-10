@@ -1604,5 +1604,44 @@ video_detector.detectObjectsFromVideo(camera_input=camera,
 
 
 
+We have trained some logos on Nike and Adidas through ImageAI for detection.If any queries,please contact below-
+
+- Shilpa S J
+Email: shilpatc25@gmail.com
+Facebook: https://www.facebook.com/shilpasj.25
+
+
+***Citation***
+
+We can cite ImageAI in your projects and research papers via the BibTeX entry below.
+
+@misc {ImageAI,
+    author = "Moses and John Olafenwa",
+    title  = "ImageAI, an open source python library built to empower developers to build applications and systems  with self-contained Computer Vision capabilities",
+    url    = "https://github.com/OlafenwaMoses/ImageAI",
+    month  = "mar",
+    year   = "2018--"
+}
+
+***References***
+
+1. https://github.com/OlafenwaMoses/ImageAI
+2. Somshubra Majumdar, DenseNet Implementation of the paper, Densely Connected Convolutional Networks in Keras https://github.com/titu1994/DenseNet
+3. Broad Institute of MIT and Harvard, Keras package for deep residual networks https://github.com/broadinstitute/keras-resnet
+4. Experiencor, Training and Detecting Objects with YOLO3 https://github.com/experiencor/keras-yolo3
+5. https://www.tensorflow.org/guide
+6. https://pythonprogramming.net/introduction-use-tensorflow-object-detection-api-tutorial/
+7. O Russakovsky et al, ImageNet Large Scale Visual Recognition Challenge https://arxiv.org/abs/1409.0575
+8. Fizyr, Keras implementation of RetinaNet object detection https://github.com/fizyr/keras-retinanet
+9. Forrest N. et al, SqueezeNet: AlexNet-level accuracy with 50x fewer parameters and <0.5MB model size https://arxiv.org/abs/1602.07360
+10. Francois Chollet, Keras code and weights files for popular deeplearning models https://github.com/fchollet/deep-learning-models
+11. Kaiming H. et al, Deep Residual Learning for Image Recognition https://arxiv.org/abs/1512.03385
+12. Szegedy. et al, Rethinking the Inception Architecture for Computer Vision https://arxiv.org/abs/1512.00567
+13. Gao. et al, Densely Connected Convolutional Networks https://arxiv.org/abs/1608.06993
+14. TY Lin et al, Microsoft COCO: Common Objects in Context https://arxiv.org/abs/1405.0312
+15. Moses & John Olafenwa, A collection of images of identifiable professionals. https://github.com/OlafenwaMoses/IdenProf
+16. Joseph Redmon and Ali Farhadi, YOLOv3: An Incremental Improvement. https://arxiv.org/abs/1804.02767
+17. Tsung-Yi. et al, Focal Loss for Dense Object Detection https://arxiv.org/abs/1708.02002
+18. https://towardsdatascience.com/creating-your-own-object-detector-ad69dda69c85
 
 
