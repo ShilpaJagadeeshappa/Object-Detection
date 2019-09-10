@@ -39,7 +39,7 @@ ImageAI provides 4 different algorithms and model types to perform image predict
 4. DenseNet121 by Facebook AI Research (Size = 31.6 mb, slower prediction time and highest accuracy)
 
 
-#Image Prediction
+# Image Prediction
 
 
 ***FirstPrediction.py***
@@ -140,7 +140,7 @@ predictionThread.start()
 
 
 
-#ImageAI : Custom Prediction Model Training
+# ImageAI : Custom Prediction Model Training
 
 
 ImageAI provides the most simple and powerful approach to training custom image prediction models using state-of-the-art SqueezeNet, ResNet50, InceptionV3 and DenseNet which you can load into the imageai.Prediction.Custom.CustomImagePrediction class. This allows you to train your own model on any set of images that corresponds to any type of objects/persons. The training process generates a JSON file that maps the objects types in your image dataset and creates lots of models. You will then pick the model with the highest accuracy and perform custom image prediction using the model and the JSON file generated.
@@ -723,7 +723,7 @@ crane : 0.05982434959150851
 
 ```
 
-#ImageAI : Video Object Detection, Tracking and Analysis
+### ImageAI : Video Object Detection, Tracking and Analysis
 ```
 -First Video Object Detection
 -Custom Video Object Detection (Object Tracking)
@@ -816,7 +816,7 @@ video_path = detector.detectObjectsFromVideo(
 ```
 
 
-#Video Analysis
+###Video Analysis
 
 
 ImageAI now provide commercial-grade video analysis in the Video Object Detection class, for both video file inputs and camera inputs. This feature allows developers to obtain deep insights into any video processed with ImageAI. This insights can be visualized in real-time, stored in a NoSQL database for future review or analysis.
@@ -971,7 +971,7 @@ Link2: https://drive.google.com/open?id=17934YONVSXvd4uuJE0KwenEFks7fFYe4
 Link3: https://drive.google.com/open?id=1cs_06CuhXDvZp3fHJWFpam-31eclOhc-
 ```
 
-###Video Detection Timeout
+# Video Detection Timeout
 
 ImageAI now allows you to set a timeout in seconds for detection of objects in videos or camera live feed. To set a timeout for your video detection code, all you need to do is specify the detection_timeout parameter in the detectObjectsFromVideo() function to the number of desired seconds. In the example code below, we set detection_timeout to 120 seconds (2 minutes).
 
@@ -998,4 +998,572 @@ video_path = detector.detectObjectsFromVideo(camera_input=camera,
                                              detection_timeout=120)
                                              
  ```
+
+# ImageAI : Custom Detection Model Training
+
+ImageAI provides the most simple and powerful approach to training custom object detection models using the YOLOv3 architeture, which which you can load into the imageai.Detection.Custom.CustomObjectDetection class. This allows you to train your own model on any set of images that corresponds to any type of objects of interest. The training process generates a JSON file that maps the objects names in your image dataset and the detection anchors, as well as creates lots of models. In choosing the best model for your custom object detection task, an evaluateModel() function has been provided to compute the mAP of your saved models by allowing you to state your desired IoU and Non-maximum Suppression values. Then you can perform custom object detection using the model and the JSON file generated.
+
+
+- Preparing your custom dataset
+- Training on your custom Dataset
+- Evaluating your saved detection models' mAP
+
+### Preparing your custom datasets
+
+To train a custom detection model, you need to prepare the images you want to use to train the model. You will prepare the images as follows:
+
+1. Decide the type of object(s) you want to detect and collect about 200 (minimum recommendation) or more picture of each of the object(s)
+2. Once you have collected the images, you need to annotate the object(s) in the images. ImageAI uses the Pascal VOC format for image annotation. You can generate this annotation for your images using the easy to use LabelImg image annotation tool, available for Windows, Linux and MacOS systems. Open the link below to install the annotation tool. See: https://github.com/tzutalin/labelImg
+3. When you are done annotating your images, annotation XML files will be generated for each image in your dataset. The annotation XML file describes each or all of the objects in the image. For example, if each image your image names are image(1).jpg, image(2).jpg, image(3).jpg till image(z).jpg; the corresponding annotation for each of the images will be image(1).xml, image(2).xml, image(3).xml till image(z).xml.This is to reference or map the objects for detection in json.
+4. Once you have the annotations for all your images, create a folder for your dataset (E.g headsets) and in this parent folder, create child folders train and validation
+5. In the train folder, create images and annotations sub-folders. Put about 70-80% of your dataset of each object's images in the images folder and put the corresponding annotations for these images in the annotations folder.
+6. In the validation folder, create images and annotations sub-folders. Put the rest of your dataset images in the images folder and put the corresponding annotations for these images in the annotations folder.
+7. Once you have done this, the structure of your image dataset folder should look like below:
+```
+>> train    >> images       >> img_1.jpg  (shows Object_1)
+            >> images       >> img_2.jpg  (shows Object_2)
+            >> images       >> img_3.jpg  (shows Object_1, Object_3 and Object_n)
+            >> annotations  >> img_1.xml  (describes Object_1)
+            >> annotations  >> img_2.xml  (describes Object_2)
+            >> annotations  >> img_3.xml  (describes Object_1, Object_3 and Object_n)
+
+>> validation   >> images       >> img_151.jpg (shows Object_1, Object_3 and Object_n)
+                >> images       >> img_152.jpg (shows Object_2)
+                >> images       >> img_153.jpg (shows Object_1)
+                >> annotations  >> img_151.xml (describes Object_1, Object_3 and Object_n)
+                >> annotations  >> img_152.xml (describes Object_2)
+                >> annotations  >> img_153.xml (describes Object_1)
+```
+
+8. You can train your custom detection model completely from scratch or use transfer learning (recommended for better accuracy) from a pre-trained YOLOv3 model. Also, we have provided a sample annotated Hololens and Headsets (Hololens and Oculus) dataset for you to train with. Download the pre-trained YOLOv3 model and the sample datasets in the link below.
+
+Link to source code of ImageAI by Moses Olfenwa- https://github.com/OlafenwaMoses/ImageAI/releases/tag/essential-v4
+
+### Training on your custom dataset
+
+
+Before you start training your custom detection model, kindly take note of the following:
+
+1. The default batch_size is 4. If you are training with Google Colab, this will be fine. However, I will advice you use a more powerful GPU than the K80 offered by Colab as the higher your batch_size (8, 16), the better the accuracy of your detection model.
+2. If you experience '_TfDeviceCaptureOp' object has no attribute '_set_device_from_string' error in Google Colab, it is due to a bug in Tensorflow. You can solve this by installing Tensorflow GPU 1.13.1.
+
+```
+pip3 install tensorflow-gpu==1.13.1
+```
+
+Then your training code goes as follows:
+
+```
+from imageai.Detection.Custom import DetectionModelTrainer
+
+trainer = DetectionModelTrainer()
+trainer.setModelTypeAsYOLOv3()
+trainer.setDataDirectory(data_directory="hololens")
+trainer.setTrainConfig(object_names_array=["hololens"], batch_size=4, num_experiments=200, train_from_pretrained_model="pretrained-yolov3.h5")
+# In the above,when training for detecting multiple objects,
+#set object_names_array=["object1", "object2", "object3",..."objectz"]
+trainer.trainModel()
+
+```
+
+In the line above, we configured our detection model trainer. The parameters we stated in the function as as below:
+
+- num_objects : this is an array containing the names of the objects in our dataset
+- batch_size : this is to state the batch size for the training
+- num_experiments : this is to state the number of times the network will train over all the training images, which is also called epochs
+- train_from_pretrained_model(optional) : this is to train using transfer learning from a pre-trained YOLOv3 model
+
+trainer.trainModel()
+
+When you start the training, you should see something like this in the console:
+
+```
+Using TensorFlow backend.
+Generating anchor boxes for training images and annotation...
+Average IOU for 9 anchors: 0.78
+Anchor Boxes generated.
+Detection configuration saved in  hololens/json/detection_config.json
+Training on: 	['hololens']
+Training with Batch Size:  4
+Number of Experiments:  200
+
+Epoch 1/200
+ - 733s - loss: 34.8253 - yolo_layer_1_loss: 6.0920 - yolo_layer_2_loss: 11.1064 - yolo_layer_3_loss: 17.6269 - val_loss: 20.5028 - val_yolo_layer_1_loss: 4.0171 - val_yolo_layer_2_loss: 7.5175 - val_yolo_layer_3_loss: 8.9683
+Epoch 2/200
+ - 648s - loss: 11.1396 - yolo_layer_1_loss: 2.1209 - yolo_layer_2_loss: 4.0063 - yolo_layer_3_loss: 5.0124 - val_loss: 7.6188 - val_yolo_layer_1_loss: 1.8513 - val_yolo_layer_2_loss: 2.2446 - val_yolo_layer_3_loss: 3.5229
+Epoch 3/200
+ - 674s - loss: 6.4360 - yolo_layer_1_loss: 1.3500 - yolo_layer_2_loss: 2.2343 - yolo_layer_3_loss: 2.8518 - val_loss: 7.2326 - val_yolo_layer_1_loss: 1.8762 - val_yolo_layer_2_loss: 2.3802 - val_yolo_layer_3_loss: 2.9762
+Epoch 4/200
+ - 634s - loss: 5.3801 - yolo_layer_1_loss: 1.0323 - yolo_layer_2_loss: 1.7854 - yolo_layer_3_loss: 2.5624 - val_loss: 6.3730 - val_yolo_layer_1_loss: 1.4272 - val_yolo_layer_2_loss: 2.0534 - val_yolo_layer_3_loss: 2.8924
+Epoch 5/200
+ - 645s - loss: 5.2569 - yolo_layer_1_loss: 0.9953 - yolo_layer_2_loss: 1.8611 - yolo_layer_3_loss: 2.4005 - val_loss: 6.0458 - val_yolo_layer_1_loss: 1.7037 - val_yolo_layer_2_loss: 1.9754 - val_yolo_layer_3_loss: 2.3667
+Epoch 6/200
+ - 655s - loss: 4.7582 - yolo_layer_1_loss: 0.9959 - yolo_layer_2_loss: 1.5986 - yolo_layer_3_loss: 2.1637 - val_loss: 5.8313 - val_yolo_layer_1_loss: 1.1880 - val_yolo_layer_2_loss: 1.9962 - val_yolo_layer_3_loss: 2.6471
+Epoch 7/200
+```
+
+
+```
+Using TensorFlow backend.
+Generating anchor boxes for training images and annotation...
+Average IOU for 9 anchors: 0.78
+Anchor Boxes generated.
+Detection configuration saved in  hololens/json/detection_config.json
+Training on: 	['hololens']
+Training with Batch Size:  4
+Number of Experiments:  200
+
+```
+The above details signifies the following:
+
+1. ImageAI autogenerates the best match detection anchor boxes for your image dataset.
+2. The anchor boxes and the object names mapping are saved in json/detection_config.json path of in the image dataset folder. Please note that for every new training you start, a new detection_config.json file is generated and is only compatible with the model saved during that training.
+
+```
+Epoch 1/200
+ - 733s - loss: 34.8253 - yolo_layer_1_loss: 6.0920 - yolo_layer_2_loss: 11.1064 - yolo_layer_3_loss: 17.6269 - val_loss: 20.5028 - val_yolo_layer_1_loss: 4.0171 - val_yolo_layer_2_loss: 7.5175 - val_yolo_layer_3_loss: 8.9683
+Epoch 2/200
+ - 648s - loss: 11.1396 - yolo_layer_1_loss: 2.1209 - yolo_layer_2_loss: 4.0063 - yolo_layer_3_loss: 5.0124 - val_loss: 7.6188 - val_yolo_layer_1_loss: 1.8513 - val_yolo_layer_2_loss: 2.2446 - val_yolo_layer_3_loss: 3.5229
+Epoch 3/200
+ - 674s - loss: 6.4360 - yolo_layer_1_loss: 1.3500 - yolo_layer_2_loss: 2.2343 - yolo_layer_3_loss: 2.8518 - val_loss: 7.2326 - val_yolo_layer_1_loss: 1.8762 - val_yolo_layer_2_loss: 2.3802 - val_yolo_layer_3_loss: 2.9762
+Epoch 4/200
+ - 634s - loss: 5.3801 - yolo_layer_1_loss: 1.0323 - yolo_layer_2_loss: 1.7854 - yolo_layer_3_loss: 2.5624 - val_loss: 6.3730 - val_yolo_layer_1_loss: 1.4272 - val_yolo_layer_2_loss: 2.0534 - val_yolo_layer_3_loss: 2.8924
+Epoch 5/200
+ - 645s - loss: 5.2569 - yolo_layer_1_loss: 0.9953 - yolo_layer_2_loss: 1.8611 - yolo_layer_3_loss: 2.4005 - val_loss: 6.0458 - val_yolo_layer_1_loss: 1.7037 - val_yolo_layer_2_loss: 1.9754 - val_yolo_layer_3_loss: 2.3667
+Epoch 6/200
+ - 655s - loss: 4.7582 - yolo_layer_1_loss: 0.9959 - yolo_layer_2_loss: 1.5986 - yolo_layer_3_loss: 2.1637 - val_loss: 5.8313 - val_yolo_layer_1_loss: 1.1880 - val_yolo_layer_2_loss: 1.9962 - val_yolo_layer_3_loss: 2.6471
+Epoch 7/200
+```
+
+3. The above signifies the progress of the training.
+4. For each experiment (Epoch), the general total validation loss (E.g - loss: 4.7582) is reported.
+5. For each drop in the loss after an experiment, a model is saved in the hololens/models folder. The lower the loss, the better the model.
+
+Once you are done training, you can visit the link below for performing object detection with your custom detection model and detection_config.json file.
+
+### Evaluating your saved detection models' mAP
+
+After training on your custom dataset, you can evaluate the mAP of your saved models by specifying your desired IoU and Non-maximum suppression values. See details as below:
+
+1. Single Model Evaluation: To evaluate a single model, simply use the example code below with the path to your dataset directory, the model file and the detection_config.json file saved during the training. In the example, we used an object_threshold of 0.3 ( percentage_score >= 30% ), IoU of 0.5 and Non-maximum suppression value of 0.5.
+
+```
+from imageai.Detection.Custom import DetectionModelTrainer
+
+trainer = DetectionModelTrainer()
+trainer.setModelTypeAsYOLOv3()
+trainer.setDataDirectory(data_directory="hololens")
+metrics = trainer.evaluateModel(model_path="detection_model-ex-60--loss-2.76.h5", json_path="detection_config.json", iou_threshold=0.5, object_threshold=0.3, nms_threshold=0.5)
+```
+
+
+Consider that trainer.evaluateModel method will show the metrics on standard output as shown below, but also returns a list of dicts containing all the information that is displayed.
+```
+Sample Result:
+
+Model File:  hololens_detection_model-ex-09--loss-4.01.h5 
+Using IoU :  0.5
+Using Object Threshold :  0.3
+Using Non-Maximum Suppression :  0.5
+hololens: 0.9613
+mAP: 0.9613
+===============================
+
+Let's see how those metrics looks like:
+
+[{
+    'average_precision': {'hololens': 0.9613334437735249},
+    'map': 0.9613334437735249,
+    'model_file': 'hololens_detection_model-ex-09--loss-4.01.h5',
+    'using_iou': 0.5,
+    'using_non_maximum_suppression': 0.5,
+    'using_object_threshold': 0.3
+}]
+
+```
+
+2. Multi Model Evaluation: To evaluate all your saved models, simply parse in the path to the folder containing the models as the model_path as seen in the example below:
+
+```
+from imageai.Detection.Custom import DetectionModelTrainer
+
+trainer = DetectionModelTrainer()
+trainer.setModelTypeAsYOLOv3()
+trainer.setDataDirectory(data_directory="hololens")
+metrics = trainer.evaluateModel(model_path="hololens/models", json_path="hololens/json/detection_config.json", iou_threshold=0.5, object_threshold=0.3, nms_threshold=0.5)
+```
+
+Sample Result:
+
+```
+Model File:  hololens/models/detection_model-ex-07--loss-4.42.h5 
+Using IoU :  0.5
+Using Object Threshold :  0.3
+Using Non-Maximum Suppression :  0.5
+hololens: 0.9231
+mAP: 0.9231
+===============================
+Model File:  hololens/models/detection_model-ex-10--loss-3.95.h5 
+Using IoU :  0.5
+Using Object Threshold :  0.3
+Using Non-Maximum Suppression :  0.5
+hololens: 0.9725
+mAP: 0.9725
+===============================
+Model File:  hololens/models/detection_model-ex-05--loss-5.26.h5 
+Using IoU :  0.5
+Using Object Threshold :  0.3
+Using Non-Maximum Suppression :  0.5
+hololens: 0.9204
+mAP: 0.9204
+===============================
+Model File:  hololens/models/detection_model-ex-03--loss-6.44.h5 
+Using IoU :  0.5
+Using Object Threshold :  0.3
+Using Non-Maximum Suppression :  0.5
+hololens: 0.8120
+mAP: 0.8120
+===============================
+Model File:  hololens/models/detection_model-ex-18--loss-2.96.h5 
+Using IoU :  0.5
+Using Object Threshold :  0.3
+Using Non-Maximum Suppression :  0.5
+hololens: 0.9431
+mAP: 0.9431
+===============================
+Model File:  hololens/models/detection_model-ex-17--loss-3.10.h5 
+Using IoU :  0.5
+Using Object Threshold :  0.3
+Using Non-Maximum Suppression :  0.5
+hololens: 0.9404
+mAP: 0.9404
+===============================
+Model File:  hololens/models/detection_model-ex-08--loss-4.16.h5 
+Using IoU :  0.5
+Using Object Threshold :  0.3
+Using Non-Maximum Suppression :  0.5
+hololens: 0.9725
+mAP: 0.9725
+===============================
+Let's see how those metrics looks like:
+
+[{
+    'average_precision': {'hololens': 0.9231334437735249},
+    'map': 0.9231334437735249,
+    'model_file': 'hololens/models/detection_model-ex-07--loss-4.42.h5',
+    'using_iou': 0.5,
+    'using_non_maximum_suppression': 0.5,
+    'using_object_threshold': 0.3
+},
+{
+    'average_precision': {'hololens': 0.9725334437735249},
+    'map': 0.97251334437735249,
+    'model_file': 'hololens/models/detection_model-ex-10--loss-3.95.h5',
+    'using_iou': 0.5,
+    'using_non_maximum_suppression': 0.5,
+    'using_object_threshold': 0.3
+},
+{
+    'average_precision': {'hololens': 0.92041334437735249},
+    'map': 0.92041334437735249,
+    'model_file': 'hololens/models/detection_model-ex-05--loss-5.26.h5',
+    'using_iou': 0.5,
+    'using_non_maximum_suppression': 0.5,
+    'using_object_threshold': 0.3
+},
+{
+    'average_precision': {'hololens': 0.81201334437735249},
+    'map': 0.81201334437735249,
+    'model_file': 'hololens/models/detection_model-ex-03--loss-6.44.h5',
+    'using_iou': 0.5,
+    'using_non_maximum_suppression': 0.5,
+    'using_object_threshold': 0.3
+},
+{
+    'average_precision': {'hololens': 0.94311334437735249},
+    'map': 0.94311334437735249,
+    'model_file': 'hololens/models/detection_model-ex-18--loss-2.96.h5',
+    'using_iou': 0.5,
+    'using_non_maximum_suppression': 0.5,
+    'using_object_threshold': 0.3
+},
+{
+    'average_precision': {'hololens': 0.94041334437735249},
+    'map': 0.94041334437735249,
+    'model_file': 'hololens/models/detection_model-ex-17--loss-3.10.h5',
+    'using_iou': 0.5,
+    'using_non_maximum_suppression': 0.5,
+    'using_object_threshold': 0.3
+},
+{
+    'average_precision': {'hololens': 0.97251334437735249},
+    'map': 0.97251334437735249,
+    'model_file': 'hololens/models/detection_model-ex-08--loss-4.16.h5',
+    'using_iou': 0.5,
+    'using_non_maximum_suppression': 0.5,
+    'using_object_threshold': 0.3
+}
+]
+```
+
+
+
+
+
+
+
+# ImageAI : Custom Object Detection
+
+
+- Custom Object Detection
+- Object Detection, Extraction and Fine-tune
+- Hiding/Showing Object Name and Probability
+- Image Input & Output Types
+
+
+ImageAI provides very convenient and powerful methods to perform object detection on images and extract each object from the image using your own custom YOLOv3 model and the corresponding detection_config.json generated during the training. To test the custom object detection, you can download a sample custom model we have trained to detect the Hololens headset and its detection_config.json file via the links below:
+```
+- https://github.com/OlafenwaMoses/ImageAI/releases/download/essential-v4/hololens-ex-60--loss-2.76.h5
+- https://github.com/OlafenwaMoses/ImageAI/releases/download/essential-v4/detection_config.json
+```
+Once you download the custom object detection model file, you should copy the model file to the your project folder where your .py files will be. Then create a python file and give it a name; an example is FirstCustomDetection.py. Then write the code below into the python file:
+
+
+***FirstCustomDetection.py***
+ 
+ ```
+ from imageai.Detection.Custom import CustomObjectDetection
+
+detector = CustomObjectDetection()
+detector.setModelTypeAsYOLOv3()
+detector.setModelPath("hololens-ex-60--loss-2.76.h5")
+detector.setJsonPath("detection_config.json")
+detector.loadModel()
+detections = detector.detectObjectsFromImage(input_image="holo2.jpg", output_image_path="holo2-detected.jpg")
+for detection in detections:
+    print(detection["name"], " : ", detection["percentage_probability"], " : ", detection["box_points"])
+```
+
+
+***Object Detection, Extraction and Fine-tune***
+
+```
+from imageai.Detection.Custom import CustomObjectDetection
+
+detector = CustomObjectDetection()
+detector.setModelTypeAsYOLOv3()
+detector.setModelPath("hololens-ex-60--loss-2.76.h5")
+detector.setJsonPath("detection_config.json") 
+detector.loadModel()
+detections, extracted_objects_array = detector.detectObjectsFromImage(input_image="holo2.jpg", output_image_path="holo2-detected.jpg", extract_detected_objects=True)
+
+for detection, object_path in zip(detections, extracted_objects_array):
+    print(object_path)
+    print(detection["name"], " : ", detection["percentage_probability"], " : ", detection["box_points"])
+    print("---------------")
+    
+```
+
+***Hiding/Showing Object Name and Probability***
+
+
+```
+detections = detector.detectObjectsFromImage(input_image=os.path.join(execution_path , "holo2.jpg"), output_image_path=os.path.join(execution_path , "holo2_nodetails.jpg"), minimum_percentage_probability=30, display_percentage_probability=False, display_object_name=False)
+
+```
+
+
+***Image Input & Output Types***
+
+
+ImageAI custom object detection supports 2 input types of inputs which are file path to image file(default) and numpy array of an image as well as 2 types of output which are image file(default) and numpy **array **. This means you can now perform object detection in production applications such as on a web server and system that returns file in any of the above stated formats. To perform object detection with numpy array input, you just need to state the input type in the .detectObjectsFromImage() function. See example below.
+
+
+```
+detections = detector.detectObjectsFromImage(input_type="array", input_image=image_array , output_image_path=os.path.join(execution_path , "holo2-detected.jpg")) # For numpy array input type
+```
+
+To perform object detection with numpy array output you just need to state the output type in the .detectObjectsFromImage() function. See example below.
+
+```
+detected_image_array, detections = detector.detectObjectsFromImage(output_type="array", input_image="holo2.jpg" ) # For numpy array output type
+```
+
+# ImageAI : Custom Video Object Detection, Tracking and Analysis
+
+- First Custom Video Object Detection
+- Camera / Live Stream Video Detection
+- Video Analysis
+- Hiding/Showing Object Name and Probability
+- Frame Detection Intervals
+- Video Detection Timeout (NEW)
+
+
+ImageAI provides convenient, flexible and powerful methods to perform object detection on videos using your own custom YOLOv3 model and the corresponding detection_config.json generated during the training. 
+
+
+Because video object detection is a compute intensive tasks, we advise you perform this experiment using a computer with a NVIDIA GPU and the GPU version of Tensorflow installed. Performing Video Object Detection CPU will be slower than using an NVIDIA GPU powered computer. You can use Google Colab for this experiment as it has an NVIDIA K80 GPU available for free.
+
+***FirstCustomVideoObjectDetection.py***
+
+```
+
+from imageai.Detection.Custom import CustomVideoObjectDetection
+import os
+
+execution_path = os.getcwd()
+
+video_detector = CustomVideoObjectDetection()
+video_detector.setModelTypeAsYOLOv3()
+video_detector.setModelPath("hololens-ex-60--loss-2.76.h5")
+video_detector.setJsonPath("detection_config.json")
+video_detector.loadModel()
+
+video_detector.detectObjectsFromVideo(input_file_path="holo1.mp4",
+                                          output_file_path=os.path.join(execution_path, "holo1-detected3"),
+                                          frames_per_second=20,
+                                          minimum_percentage_probability=40,
+                                          log_progress=True)
+					  
+					  
+```
+
+***Camera / Live Stream Video Detection***
+
+ImageAI now allows live-video detection with support for camera inputs. Using OpenCV's VideoCapture() function, you can load live-video streams from a device camera, cameras connected by cable or IP cameras, and parse it into ImageAI's detectObjectsFromVideo() function. All features that are supported for detecting objects in a video file is also available for detecting objects in a camera's live-video feed. Find below an example of detecting live-video feed from the device camera.
+
+```
+from imageai.Detection import VideoObjectDetection
+import os
+import cv2
+
+execution_path = os.getcwd()
+camera = cv2.VideoCapture(0)
+
+video_detector = CustomVideoObjectDetection()
+video_detector.setModelTypeAsYOLOv3()
+video_detector.setModelPath("hololens-ex-60--loss-2.76.h5")
+video_detector.setJsonPath("detection_config.json")
+video_detector.loadModel()
+
+video_detector.detectObjectsFromVideo(camera_input=camera,
+                                          output_file_path=os.path.join(execution_path, "holo1-detected3"),
+                                          frames_per_second=20,
+                                          minimum_percentage_probability=40,
+                                          log_progress=True)
+
+
+```
+
+
+
+The difference in the code above and the code for the detection of a video file is that we defined an OpenCV VideoCapture instance and loaded the default device camera into it. Then we parsed the camera we defined into the parameter camera_input which replaces the input_file_path that is used for video file.
+
+
+***Video Analysis***
+ImageAI now provide commercial-grade video analysis in the Custom Video Object Detection class, for both video file inputs and camera inputs. This feature allows developers to obtain deep insights into any video processed with ImageAI. This insights can be visualized in real-time, stored in a NoSQL database for future review or analysis.
+
+For video analysis, the detectObjectsFromVideo() now allows you to state your own defined functions which will be executed for every frame, seconds and/or minute of the video detected as well as a state a function that will be executed at the end of a video detection. Once this functions are stated, they will receive raw but comprehensive analytical data on the index of the frame/second/minute, objects detected (name, percentage_probability and box_points), number of instances of each unique object detected and average number of occurrence of each unique object detected over a second/minute and entire video.
+
+To obtain the video analysis, all you need to do is specify a function, state the corresponding parameters it will be receiving and parse the function name into the per_frame_function, per_second_function, per_minute_function and video_complete_function parameters in the detection function. Find below examples of video analysis functions.
+
+```
+def forFrame(frame_number, output_array, output_count):
+    print("FOR FRAME " , frame_number)
+    print("Output for each object : ", output_array)
+    print("Output count for unique objects : ", output_count)
+    print("------------END OF A FRAME --------------")
+
+def forSeconds(second_number, output_arrays, count_arrays, average_output_count):
+    print("SECOND : ", second_number)
+    print("Array for the outputs of each frame ", output_arrays)
+    print("Array for output count for unique objects in each frame : ", count_arrays)
+    print("Output average count for unique objects in the last second: ", average_output_count)
+    print("------------END OF A SECOND --------------")
+
+def forMinute(minute_number, output_arrays, count_arrays, average_output_count):
+    print("MINUTE : ", minute_number)
+    print("Array for the outputs of each frame ", output_arrays)
+    print("Array for output count for unique objects in each frame : ", count_arrays)
+    print("Output average count for unique objects in the last minute: ", average_output_count)
+    print("------------END OF A MINUTE --------------")
+
+video_detector = CustomVideoObjectDetection()
+video_detector.setModelTypeAsYOLOv3()
+video_detector.setModelPath("hololens-ex-60--loss-2.76.h5")
+video_detector.setJsonPath("detection_config.json")
+video_detector.loadModel()
+
+video_detector.detectObjectsFromVideo(camera_input=camera,
+                                          output_file_path=os.path.join(execution_path, "holo1-detected3"),
+                                          frames_per_second=20, per_second_function=forSeconds, per_frame_function = forFrame, per_minute_function= forMinute,
+                                          minimum_percentage_probability=40,
+                                          log_progress=True)
+```
+
+
+ImageAI also allows you to obtain complete analysis of the entire video processed. All you need is to define a function like the forSecond or forMinute function and set the video_complete_function parameter into your .detectObjectsFromVideo() function. The same values for the per_second-function and per_minute_function will be returned. The difference is that no index will be returned and the other 3 values will be returned, and the 3 values will cover all frames in the video. Below is a sample function:
+```
+def forFull(output_arrays, count_arrays, average_output_count):
+    #Perform action on the 3 parameters returned into the function
+
+
+video_detector.detectObjectsFromVideo(camera_input=camera,
+                                          output_file_path=os.path.join(execution_path, "holo1-detected3"),
+                                          video_complete_function=forFull,
+                                          minimum_percentage_probability=40,
+                                          log_progress=True)
+```
+
+FINAL NOTE ON VIDEO ANALYSIS : 
+ImageAI allows you to obtain the detected video frame as a Numpy array at each frame, second and minute function. All you need to do is specify one more parameter in your function and set return_detected_frame=True in your detectObjectsFromVideo() function. Once this is set, the extra parameter you sepecified in your function will be the Numpy array of the detected frame. See a sample below:
+
+```
+def forFrame(frame_number, output_array, output_count, detected_frame):
+    print("FOR FRAME " , frame_number)
+    print("Output for each object : ", output_array)
+    print("Output count for unique objects : ", output_count)
+	print("Returned Objects is : ", type(detected_frame))
+    print("------------END OF A FRAME --------------")
+
+
+video_detector.detectObjectsFromVideo(camera_input=camera,
+                                          output_file_path=os.path.join(execution_path, "holo1-detected3"),
+                                          per_frame_function=forFrame,
+                                          minimum_percentage_probability=40,
+                                          log_progress=True, return_detected_frame=True)
+```
+***Frame Detection Intervals***
+
+The above video objects detection task are optimized for frame-real-time object detections that ensures that objects in every frame of the video is detected. ImageAI provides you the option to adjust the video frame detections which can speed up your video detection process. When calling the .detectObjectsFromVideo(), you can specify at which frame interval detections should be made. By setting the frame_detection_interval parameter to be equal to 5 or 20, that means the object detections in the video will be updated after 5 frames or 20 frames. If your output video frames_per_second is set to 20, that means the object detections in the video will be updated once in every quarter of a second or every second. This is useful in case scenarios where the available compute is less powerful and speeds of moving objects are low. This ensures you can have objects detected as second-real-time , half-a-second-real-time or whichever way suits your needs.
+
+***Custom Video Detection Timeout***
+
+ImageAI now allows you to set a timeout in seconds for detection of objects in videos or camera live feed. To set a timeout for your video detection code, all you need to do is specify the detection_timeout parameter in the detectObjectsFromVideo() function to the number of desired seconds. In the example code below, we set detection_timeout to 120 seconds (2 minutes).
+
+```
+
+from imageai.Detection import VideoObjectDetection
+import os
+import cv2
+
+execution_path = os.getcwd()
+camera = cv2.VideoCapture(0)
+
+video_detector = CustomVideoObjectDetection()
+video_detector.setModelTypeAsYOLOv3()
+video_detector.setModelPath("hololens-ex-60--loss-2.76.h5")
+video_detector.setJsonPath("detection_config.json")
+video_detector.loadModel()
+
+video_detector.detectObjectsFromVideo(camera_input=camera,
+                                          output_file_path=os.path.join(execution_path, "holo1-detected3"),
+                                          frames_per_second=20,  minimum_percentage_probability=40,
+                                          detection_timeout=120)
+
+```
+
+
+
+
 
