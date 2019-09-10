@@ -5,7 +5,7 @@ The  field of supervised learning in AI has tremondously impacted the object tra
 
 The Following scientists are core contributers of AI/ML-
 
-***Scientists-Contributers in AI***
+***Scientists as Contributers in AI***
 - Alan J. Perlis
 - Maurice Wilkes
 - Richard Hamming
