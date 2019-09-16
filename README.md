@@ -62,7 +62,7 @@ To use ImageAI in your application developments, you must have installed the fol
 4. Keras 2.x
 5. pip install -U tensorflow keras opencv-python
 
-Link to download the Nike model that we have trained with 300 images of Nike logo: https://drive.google.com/file/d/1K6mscGrFylM_0kXmjsACAoVbTZn58OfB/view?usp=sharing
+Link to download my Nike model that we have trained with 300 images of Nike logo: https://drive.google.com/file/d/1K6mscGrFylM_0kXmjsACAoVbTZn58OfB/view?usp=sharing
 
 
 ***Installation***
