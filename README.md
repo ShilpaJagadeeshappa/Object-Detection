@@ -1608,22 +1608,16 @@ video_detector.detectObjectsFromVideo(camera_input=camera,
 
 We have trained some logos on Nike and Adidas through ImageAI for detection.If any queries,please contact below-
 
-- Shilpa S J
-Email: shilpatc25@gmail.com
-Facebook: https://www.facebook.com/shilpasj.25
+- Shilpa Jagadeeshappa
+	
+	-Email: shilpatc25@gmail.com
+	
+	-Facebook: https://www.facebook.com/shilpasj.25
+	
+	-Github: https://github.com/ShilpaJagadeeshappa
+	
+	-LinkedIn: https://www.linkedin.com/in/shilpa-s-j-5b0792130/
 
-
-***Citation***
-
-We can cite ImageAI in your projects and research papers via the BibTeX entry below.
-
-@misc {ImageAI,
-    author = "Moses and John Olafenwa",
-    title  = "ImageAI, an open source python library built to empower developers to build applications and systems  with self-contained Computer Vision capabilities",
-    url    = "https://github.com/OlafenwaMoses/ImageAI",
-    month  = "mar",
-    year   = "2018--"
-}
 
 ***References***
 
